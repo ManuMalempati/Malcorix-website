@@ -3,18 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Malcorix — Amazon SP-API Integrations</title>
-<meta name="description" content="Malcorix builds custom software for Amazon sellers: profit tracking, Buy Box monitoring, and refund recovery built on the SP-API.">
+<title>Malcorix — Amazon SP API Integrations</title>
+<meta name="description" content="Malcorix builds custom software for Amazon sellers: profit tracking, Buy Box monitoring, and refund recovery built on the SP API.">
 
-<!-- ============================================================
-     EDIT THESE — everything below is config, nothing else needs
-     to change to make this yours.
-     ============================================================ -->
 <script>
   window.SITE_CONFIG = {
-    brand: "Malcorix",                 // your brand / business name
+    brand: "Malcorix",
     tagline: "Amazon seller software",
-    email: "manu.c.malempati@gmail.com",         // shown as a mailto fallback
+    ownerName: "Manu Malempati",
+    email: "malcorix.support@gmail.com",
+    phone: "+61478308493",
     googleFormEmbedUrl: "https://docs.google.com/forms/d/e/1FAIpQLScQI7iYpjP9XVUGrkpYoJ-JJLnTf8ETvdhm_tcsoVu9HpB0Ag/viewform?embedded=true",
     googleFormLinkUrl: "https://docs.google.com/forms/d/e/1FAIpQLScQI7iYpjP9XVUGrkpYoJ-JJLnTf8ETvdhm_tcsoVu9HpB0Ag/viewform"
   };
@@ -61,7 +59,6 @@
     padding:0 28px;
   }
 
-  /* ---------- header ---------- */
   header{
     position:sticky; top:0; z-index:50;
     background:rgba(15,22,32,0.88);
@@ -111,7 +108,6 @@
   .nav-cta:hover{ background:#f3b352; }
   .nav-cta:focus-visible{ outline:2px solid var(--paper); outline-offset:2px; }
 
-  /* ---------- hero ---------- */
   .hero{
     padding:88px 0 64px;
     border-bottom:1px solid var(--panel-line);
@@ -184,7 +180,6 @@
   .btn-secondary:hover{ border-color:var(--gold-dim); }
   .btn-primary:focus-visible, .btn-secondary:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
 
-  /* ---------- signature: ledger terminal ---------- */
   .ledger{
     background:var(--panel);
     border:1px solid var(--panel-line);
@@ -219,7 +214,6 @@
   .ledger-row .value.up{ color:var(--up); }
   .ledger-row .delta{ font-size:0.72rem; color:var(--up); margin-left:8px; }
 
-  /* ---------- sections ---------- */
   section{ padding:72px 0; border-bottom:1px solid var(--panel-line); }
   .section-head{ margin-bottom:44px; max-width:60ch; }
   .section-head .eyebrow{ margin-bottom:12px; }
@@ -231,7 +225,6 @@
   }
   .section-head p{ color:var(--paper-dim); margin-top:12px; }
 
-  /* services as ledger line items */
   .services{ display:flex; flex-direction:column; }
   .service-row{
     display:grid;
@@ -255,20 +248,6 @@
   }
   .service-body p{ color:var(--paper-dim); max-width:60ch; font-size:0.96rem; }
 
-  .case-strip{
-    margin-top:36px;
-    padding:20px 22px;
-    background:var(--panel);
-    border:1px solid var(--panel-line);
-    border-left:2px solid var(--gold);
-    border-radius:4px;
-    display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 10px;
-  }
-  .case-strip-label{ font-size:0.72rem; color:var(--paper-dim); letter-spacing:0.06em; text-transform:uppercase; }
-  .case-strip-name{ font-family:'Fraunces', serif; font-weight:500; color:var(--gold); font-size:1.05rem; }
-  .case-strip-desc{ font-size:0.88rem; color:var(--paper-dim); }
-
-  /* clients */
   .client-feature{
     display:grid;
     grid-template-columns:1fr;
@@ -302,12 +281,18 @@
   }
   .client-copy p{ color:var(--paper-dim); font-size:0.96rem; max-width:60ch; }
 
-  /* about */
   .about-grid{
     display:grid; grid-template-columns:1fr; gap:32px;
   }
   @media(min-width:800px){ .about-grid{ grid-template-columns:1fr 1fr; gap:56px; } }
   .about-grid p{ color:var(--paper-dim); margin-bottom:16px; }
+  .owner-name{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    color:var(--paper);
+    font-size:1.1rem;
+    margin-bottom:14px;
+  }
   .credentials{
     display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;
   }
@@ -318,6 +303,15 @@
     border:1px solid var(--panel-line);
     padding:7px 12px;
     border-radius:var(--radius);
+  }
+  .contact-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.8rem;
+    color:var(--gold);
+    margin-top:22px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 14px;
   }
 
   #offer{ padding:56px 0; }
@@ -341,7 +335,6 @@
   }
   .offer-card p{ color:var(--paper-dim); font-size:0.94rem; }
 
-  /* contact */
   #contact{ border-bottom:none; }
   .contact-panel{
     background:var(--panel);
@@ -366,7 +359,6 @@
   }
   .form-fallback p{ margin:0; font-size:0.88rem; color:var(--paper-dim); flex:1 1 260px; }
 
-  /* footer */
   footer{
     padding:32px 0;
     display:flex; flex-wrap:wrap; gap:12px;
@@ -375,6 +367,7 @@
     font-size:0.75rem;
     color:var(--paper-dim);
   }
+  footer .footer-contacts{ display:flex; gap:16px; flex-wrap:wrap; }
 </style>
 </head>
 <body>
@@ -395,7 +388,7 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow">Built on the Amazon SP-API</div>
+      <div class="eyebrow">Built on the Amazon SP API</div>
       <h1>Your Amazon business,<br><em>reconciled.</em></h1>
       <p class="sub">Custom software that turns Seller Central data into decisions — real profit per SKU, Buy Box monitoring, and refunds you'd otherwise miss.</p>
       <div class="hero-actions">
@@ -418,7 +411,7 @@
         <span><span class="value mono" id="stat-buybox">92.1%</span></span>
       </div>
       <div class="ledger-row">
-        <span class="label">Reimbursements matched</span>
+        <span class="label">Reimbursement opportunities identified</span>
         <span><span class="value up mono" id="stat-refunds">$1,842</span></span>
       </div>
       <div class="ledger-row">
@@ -434,7 +427,7 @@
     <div class="section-head">
       <div class="eyebrow">Services</div>
       <h2>Software that watches the numbers you don't have time to.</h2>
-      <p>Each of these connects directly to your Seller Central account through the SP-API — no manual exports, no spreadsheets to babysit.</p>
+      <p>Each of these connects directly to your Seller Central account through the SP API, no manual exports, no spreadsheets to babysit.</p>
     </div>
 
     <div class="services">
@@ -442,7 +435,7 @@
         <span class="service-num mono">01</span>
         <div class="service-body">
           <h3>Real time profit tracking</h3>
-          <p>Profit calculated as orders come in, factoring in cost of goods, Amazon fees, and ad spend — not a spreadsheet you reconcile once a month.</p>
+          <p>Profit calculated as orders come in, factoring in cost of goods, Amazon fees, and ad spend, broken down at the SKU level so you can see exactly which products are making money and which are quietly losing it.</p>
         </div>
       </div>
       <div class="service-row">
@@ -462,22 +455,15 @@
       <div class="service-row">
         <span class="service-num mono">04</span>
         <div class="service-body">
-          <h3>SKU level profitability profiles</h3>
-          <p>Every product gets its own margin breakdown, so you can see exactly which SKUs are actually making money and which are quietly losing it.</p>
-        </div>
-      </div>
-      <div class="service-row">
-        <span class="service-num mono">05</span>
-        <div class="service-body">
           <h3>Fee change alerts</h3>
           <p>Amazon adjusts referral and other fees without much notice. Changes are tracked and surfaced automatically, so a shift in fees doesn't quietly eat your margin.</p>
         </div>
       </div>
       <div class="service-row">
-        <span class="service-num mono">06</span>
+        <span class="service-num mono">05</span>
         <div class="service-body">
           <h3>Automated invoice generation</h3>
-          <p>Invoices created automatically by pulling straight from your order data — no manual entry, no reconciling against Seller Central by hand.</p>
+          <p>Invoices created automatically by pulling straight from your order data, no manual entry, no reconciling against Seller Central by hand.</p>
         </div>
       </div>
     </div>
@@ -495,9 +481,7 @@
 
     <div class="client-feature">
       <div class="client-logo" aria-hidden="true">
-        <!-- Replace this with an <img src="your-logo.png" alt="Global Computers LLC"> tag once you have the logo file -->
         <img src="global_computers.png" alt="Global Computers LLC">
-        <!-- <span class="mono">LOGO</span> -->
       </div>
       <div class="client-copy">
         <h3>Global Computers LLC</h3>
@@ -514,6 +498,7 @@
       <h2 class="display" style="font-size:1.6rem; font-weight:500;">A developer who's built this exact backend before.</h2>
     </div>
     <div>
+      <p class="owner-name" id="owner-name">Manu Malempati</p>
       <p>I am a third year Computing and Software Systems student at the University of Melbourne, building backend software specifically for Amazon sellers.</p>
       <p>The SP API is genuinely difficult to work with. It is inconsistently documented, rate limited, and prone to changing behaviour with little warning. I have hands on experience navigating that complexity, and I built and maintain a production system for Global Computers LLC that handles it day to day.</p>
       <p>I keep a small number of clients so each integration is actually tailored to how your business runs, not a generic dashboard.</p>
@@ -522,6 +507,7 @@
         <span class="credential">AWS Cloud Practitioner</span>
         <span class="credential">Technical Officer, AWS Cloud Club UniMelb</span>
       </div>
+      <div class="contact-line" id="about-contact"></div>
     </div>
   </div>
 </section>
@@ -532,7 +518,7 @@
       <div class="offer-card">
         <div class="eyebrow">Pilot offer</div>
         <h3>First automation, free to build.</h3>
-        <p>Happy to build one automation for you at no cost for the build itself — you'd only cover any operational costs it runs on (hosting, API usage, that kind of thing). It's the fastest way for both of us to see if this is worth continuing.</p>
+        <p>Happy to build one automation for you at no cost for the build itself, you would only cover any operational costs it runs on such as hosting or API usage. It is the fastest way for both of us to see if this is worth continuing.</p>
       </div>
       <div class="offer-card">
         <div class="eyebrow">Referral program</div>
@@ -547,7 +533,7 @@
   <div class="wrap">
     <div class="contact-panel">
       <h2>Tell me about your business.</h2>
-      <p>Fill in a few details about what you sell, where the manual work is, what you'd want automated and I'll reach out to talk through it.</p>
+      <p>Fill in a few details about what you sell, where the manual work is, and what you would want automated, and I'll reach out to talk through it.</p>
 
       <div id="form-container"></div>
     </div>
@@ -556,7 +542,7 @@
 
 <footer class="wrap">
   <span id="footer-brand">Malcorix</span>
-  <span id="footer-email"></span>
+  <span class="footer-contacts" id="footer-contacts"></span>
 </footer>
 
 <script>
@@ -567,8 +553,19 @@
     document.getElementById('footer-brand').textContent = '© ' + new Date().getFullYear() + ' ' + (cfg.brand || 'Malcorix');
     document.title = (cfg.brand || 'Malcorix') + ' — ' + (cfg.tagline || 'Amazon seller software');
 
-    var emailEl = document.getElementById('footer-email');
-    if(cfg.email){ emailEl.innerHTML = '<a href="mailto:' + cfg.email + '">' + cfg.email + '</a>'; }
+    var footerContacts = document.getElementById('footer-contacts');
+    var footerBits = [];
+    if(cfg.email){ footerBits.push('<a href="mailto:' + cfg.email + '">' + cfg.email + '</a>'); }
+    if(cfg.phone){ footerBits.push('<a href="tel:' + cfg.phone + '">' + cfg.phone + '</a>'); }
+    footerContacts.innerHTML = footerBits.join('');
+    footerContacts.style.display = 'flex';
+    footerContacts.style.gap = '16px';
+
+    var aboutContact = document.getElementById('about-contact');
+    var aboutBits = [];
+    if(cfg.email){ aboutBits.push('<a href="mailto:' + cfg.email + '">' + cfg.email + '</a>'); }
+    if(cfg.phone){ aboutBits.push('<a href="tel:' + cfg.phone + '">' + cfg.phone + '</a>'); }
+    aboutContact.innerHTML = aboutBits.join('<span>&middot;</span>');
 
     var container = document.getElementById('form-container');
     if(cfg.googleFormEmbedUrl){
@@ -582,12 +579,11 @@
       var linkHref = cfg.googleFormLinkUrl || (cfg.email ? ('mailto:' + cfg.email) : '#');
       var linkLabel = cfg.googleFormLinkUrl ? 'Open the form' : 'Email directly';
       fallback.innerHTML =
-        '<p>Google Form not connected yet — add <span class="mono">googleFormEmbedUrl</span> or <span class="mono">googleFormLinkUrl</span> near the top of this file.</p>' +
+        '<p>Google Form not connected yet. Add googleFormEmbedUrl or googleFormLinkUrl near the top of this file.</p>' +
         '<a href="' + linkHref + '" class="btn-primary" target="_blank" rel="noopener">' + linkLabel + '</a>';
       container.appendChild(fallback);
     }
 
-    // subtle ledger tick, respects reduced motion
     if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
       var margin = document.getElementById('stat-margin');
       var vals = ['18.4%','18.6%','18.3%','18.7%'];

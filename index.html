@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malcorix — Amazon SP-API Integrations</title>
+<meta name="description" content="Malcorix builds custom software for Amazon sellers: profit tracking, Buy Box monitoring, and refund recovery built on the SP-API.">
+
+<!-- ============================================================
+     EDIT THESE — everything below is config, nothing else needs
+     to change to make this yours.
+     ============================================================ -->
+<script>
+  window.SITE_CONFIG = {
+    brand: "Malcorix",                 // your brand / business name
+    tagline: "Amazon seller software",
+    email: "manu.c.malempati@gmail.com",         // shown as a mailto fallback
+    googleFormEmbedUrl: "https://docs.google.com/forms/d/e/1FAIpQLScQI7iYpjP9XVUGrkpYoJ-JJLnTf8ETvdhm_tcsoVu9HpB0Ag/viewform?embedded=true",
+    googleFormLinkUrl: "https://docs.google.com/forms/d/e/1FAIpQLScQI7iYpjP9XVUGrkpYoJ-JJLnTf8ETvdhm_tcsoVu9HpB0Ag/viewform"
+  };
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#0F1620;
+    --panel:#161F2B;
+    --panel-line:#26323F;
+    --paper:#EDEAE2;
+    --paper-dim:#8B93A0;
+    --gold:#E8A33D;
+    --gold-dim:#B87F2E;
+    --up:#5FAE7B;
+    --radius:2px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } * { animation-duration:0.01ms !important; transition-duration:0.01ms !important; } }
+
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  .display{ font-family:'Fraunces', serif; }
+
+  a{ color:inherit; }
+  img{ max-width:100%; display:block; }
+
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(15,22,32,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--panel-line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 0;
+  }
+  .brand{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:0.95rem;
+    letter-spacing:0.08em;
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .brand .dot{ color:var(--gold); }
+  .brand .tag{ color:var(--paper-dim); font-weight:400; font-size:0.75rem; display:none; }
+  @media(min-width:640px){ .brand .tag{ display:inline; } }
+
+  .nav-links{
+    display:flex; align-items:center; gap:22px;
+  }
+  .nav-links a:not(.nav-cta){
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.8rem;
+    text-decoration:none;
+    color:var(--paper-dim);
+    display:none;
+    transition:color 0.15s ease;
+  }
+  .nav-links a:not(.nav-cta):hover{ color:var(--paper); }
+  @media(min-width:640px){ .nav-links a:not(.nav-cta){ display:inline; } }
+
+  .nav-cta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.8rem;
+    text-decoration:none;
+    color:var(--ink);
+    background:var(--gold);
+    padding:9px 16px;
+    border-radius:var(--radius);
+    letter-spacing:0.02em;
+    transition:background 0.15s ease;
+  }
+  .nav-cta:hover{ background:#f3b352; }
+  .nav-cta:focus-visible{ outline:2px solid var(--paper); outline-offset:2px; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:88px 0 64px;
+    border-bottom:1px solid var(--panel-line);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:48px;
+    align-items:center;
+  }
+  @media(min-width:900px){ .hero-grid{ grid-template-columns:1.1fr 0.9fr; gap:56px; } }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--gold);
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px; border-radius:50%;
+    background:var(--gold);
+    display:inline-block;
+  }
+
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(2.1rem, 4.5vw, 3.4rem);
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    color:var(--paper);
+    margin-bottom:22px;
+  }
+  h1 em{ font-style:italic; color:var(--gold); }
+
+  .hero p.sub{
+    font-size:1.05rem;
+    color:var(--paper-dim);
+    max-width:46ch;
+    margin-bottom:32px;
+  }
+
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn-primary{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    text-decoration:none;
+    color:var(--ink);
+    background:var(--gold);
+    padding:13px 22px;
+    border-radius:var(--radius);
+    letter-spacing:0.02em;
+    transition:background 0.15s ease;
+  }
+  .btn-primary:hover{ background:#f3b352; }
+  .btn-secondary{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    text-decoration:none;
+    color:var(--paper);
+    border:1px solid var(--panel-line);
+    padding:13px 22px;
+    border-radius:var(--radius);
+    transition:border-color 0.15s ease;
+  }
+  .btn-secondary:hover{ border-color:var(--gold-dim); }
+  .btn-primary:focus-visible, .btn-secondary:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+
+  /* ---------- signature: ledger terminal ---------- */
+  .ledger{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .ledger-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px;
+    border-bottom:1px solid var(--panel-line);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    color:var(--paper-dim);
+    letter-spacing:0.06em;
+  }
+  .ledger-head .live{ color:var(--up); display:flex; align-items:center; gap:6px; }
+  .ledger-head .live::before{
+    content:""; width:6px; height:6px; border-radius:50%; background:var(--up);
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+  .ledger-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 18px;
+    border-bottom:1px solid var(--panel-line);
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .ledger-row:last-child{ border-bottom:none; }
+  .ledger-row .label{ font-size:0.8rem; color:var(--paper-dim); }
+  .ledger-row .value{ font-size:1.15rem; color:var(--paper); font-weight:500; }
+  .ledger-row .value.up{ color:var(--up); }
+  .ledger-row .delta{ font-size:0.72rem; color:var(--up); margin-left:8px; }
+
+  /* ---------- sections ---------- */
+  section{ padding:72px 0; border-bottom:1px solid var(--panel-line); }
+  .section-head{ margin-bottom:44px; max-width:60ch; }
+  .section-head .eyebrow{ margin-bottom:12px; }
+  .section-head h2{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(1.6rem, 3vw, 2.1rem);
+    letter-spacing:-0.01em;
+  }
+  .section-head p{ color:var(--paper-dim); margin-top:12px; }
+
+  /* services as ledger line items */
+  .services{ display:flex; flex-direction:column; }
+  .service-row{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:20px;
+    padding:26px 0;
+    border-top:1px solid var(--panel-line);
+  }
+  .service-row:last-child{ border-bottom:1px solid var(--panel-line); }
+  .service-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--gold);
+    padding-top:4px;
+  }
+  .service-body h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.25rem;
+    margin-bottom:8px;
+  }
+  .service-body p{ color:var(--paper-dim); max-width:60ch; font-size:0.96rem; }
+
+  .case-strip{
+    margin-top:36px;
+    padding:20px 22px;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-left:2px solid var(--gold);
+    border-radius:4px;
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 10px;
+  }
+  .case-strip-label{ font-size:0.72rem; color:var(--paper-dim); letter-spacing:0.06em; text-transform:uppercase; }
+  .case-strip-name{ font-family:'Fraunces', serif; font-weight:500; color:var(--gold); font-size:1.05rem; }
+  .case-strip-desc{ font-size:0.88rem; color:var(--paper-dim); }
+
+  /* clients */
+  .client-feature{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:24px;
+    align-items:center;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-left:2px solid var(--gold);
+    border-radius:6px;
+    padding:32px;
+  }
+  @media(min-width:700px){ .client-feature{ grid-template-columns:auto 1fr; gap:36px; } }
+  .client-logo{
+    width:140px; height:80px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--ink);
+    border:1px dashed var(--panel-line);
+    border-radius:4px;
+    color:var(--paper-dim);
+    font-size:0.75rem;
+    letter-spacing:0.08em;
+    flex-shrink:0;
+  }
+  .client-logo img{ max-width:100%; max-height:100%; object-fit:contain; }
+  .client-copy h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.3rem;
+    color:var(--gold);
+    margin-bottom:10px;
+  }
+  .client-copy p{ color:var(--paper-dim); font-size:0.96rem; max-width:60ch; }
+
+  /* about */
+  .about-grid{
+    display:grid; grid-template-columns:1fr; gap:32px;
+  }
+  @media(min-width:800px){ .about-grid{ grid-template-columns:1fr 1fr; gap:56px; } }
+  .about-grid p{ color:var(--paper-dim); margin-bottom:16px; }
+  .credentials{
+    display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;
+  }
+  .credential{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    color:var(--paper-dim);
+    border:1px solid var(--panel-line);
+    padding:7px 12px;
+    border-radius:var(--radius);
+  }
+
+  #offer{ padding:56px 0; }
+  .offer-grid{
+    display:grid; grid-template-columns:1fr; gap:20px;
+  }
+  @media(min-width:800px){ .offer-grid{ grid-template-columns:1fr 1fr; } }
+  .offer-card{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:28px;
+  }
+  .offer-card .eyebrow{ margin-bottom:14px; }
+  .offer-card h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.25rem;
+    margin-bottom:10px;
+    color:var(--paper);
+  }
+  .offer-card p{ color:var(--paper-dim); font-size:0.94rem; }
+
+  /* contact */
+  #contact{ border-bottom:none; }
+  .contact-panel{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:36px;
+  }
+  .contact-panel h2{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(1.5rem, 2.6vw, 2rem);
+    margin-bottom:10px;
+  }
+  .contact-panel p{ color:var(--paper-dim); margin-bottom:26px; max-width:52ch; }
+
+  .form-embed iframe{
+    width:100%; min-height:640px; border:none; border-radius:4px; background:var(--paper);
+  }
+  .form-fallback{
+    display:flex; flex-wrap:wrap; align-items:center; gap:16px;
+    padding:22px; border:1px dashed var(--panel-line); border-radius:4px;
+  }
+  .form-fallback p{ margin:0; font-size:0.88rem; color:var(--paper-dim); flex:1 1 260px; }
+
+  /* footer */
+  footer{
+    padding:32px 0;
+    display:flex; flex-wrap:wrap; gap:12px;
+    align-items:center; justify-content:space-between;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    color:var(--paper-dim);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span id="brand-name">Malcorix</span><span class="dot">·</span><span class="tag" id="brand-tag">Amazon seller software</span></div>
+    <nav class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#clients">Clients</a>
+      <a href="#about">About</a>
+      <a href="#offer">Offer</a>
+      <a href="#contact" class="nav-cta">Get in touch</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Built on the Amazon SP-API</div>
+      <h1>Your Amazon business,<br><em>reconciled.</em></h1>
+      <p class="sub">Custom software that turns Seller Central data into decisions — real profit per SKU, Buy Box monitoring, and refunds you'd otherwise miss.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Tell me about your business</a>
+        <a href="#services" class="btn-secondary">See what's on offer</a>
+      </div>
+    </div>
+
+    <div class="ledger" aria-label="Example seller metrics">
+      <div class="ledger-head">
+        <span>SELLER_ACCOUNT.STATUS</span>
+        <span class="live">TRACKING</span>
+      </div>
+      <div class="ledger-row">
+        <span class="label">Net margin (30d)</span>
+        <span><span class="value up mono" id="stat-margin">18.4%</span><span class="delta">▲ 1.2pp</span></span>
+      </div>
+      <div class="ledger-row">
+        <span class="label">Buy Box win rate</span>
+        <span><span class="value mono" id="stat-buybox">92.1%</span></span>
+      </div>
+      <div class="ledger-row">
+        <span class="label">Reimbursements matched</span>
+        <span><span class="value up mono" id="stat-refunds">$1,842</span></span>
+      </div>
+      <div class="ledger-row">
+        <span class="label">SKUs monitored</span>
+        <span class="value mono">312</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Services</div>
+      <h2>Software that watches the numbers you don't have time to.</h2>
+      <p>Each of these connects directly to your Seller Central account through the SP-API — no manual exports, no spreadsheets to babysit.</p>
+    </div>
+
+    <div class="services">
+      <div class="service-row">
+        <span class="service-num mono">01</span>
+        <div class="service-body">
+          <h3>Real time profit tracking</h3>
+          <p>Profit calculated as orders come in, factoring in cost of goods, Amazon fees, and ad spend — not a spreadsheet you reconcile once a month.</p>
+        </div>
+      </div>
+      <div class="service-row">
+        <span class="service-num mono">02</span>
+        <div class="service-body">
+          <h3>Buy Box &amp; competitor tracking</h3>
+          <p>Continuous monitoring of Buy Box status alongside competitor pricing, so a loss shows up as an alert with context, not something you notice a week later.</p>
+        </div>
+      </div>
+      <div class="service-row">
+        <span class="service-num mono">03</span>
+        <div class="service-body">
+          <h3>Automated reimbursement case creation</h3>
+          <p>Lost or damaged FBA inventory is detected and matched against orders automatically, with reimbursement cases created for you instead of filed by hand.</p>
+        </div>
+      </div>
+      <div class="service-row">
+        <span class="service-num mono">04</span>
+        <div class="service-body">
+          <h3>SKU level profitability profiles</h3>
+          <p>Every product gets its own margin breakdown, so you can see exactly which SKUs are actually making money and which are quietly losing it.</p>
+        </div>
+      </div>
+      <div class="service-row">
+        <span class="service-num mono">05</span>
+        <div class="service-body">
+          <h3>Fee change alerts</h3>
+          <p>Amazon adjusts referral and other fees without much notice. Changes are tracked and surfaced automatically, so a shift in fees doesn't quietly eat your margin.</p>
+        </div>
+      </div>
+      <div class="service-row">
+        <span class="service-num mono">06</span>
+        <div class="service-body">
+          <h3>Automated invoice generation</h3>
+          <p>Invoices created automatically by pulling straight from your order data — no manual entry, no reconciling against Seller Central by hand.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="clients">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Clients</div>
+      <h2>Trusted with real financial data.</h2>
+      <p>The Amazon SP API is notoriously difficult to work with. Between rate limits, inconsistent documentation, and reports that change format without warning, most sellers never get past the setup stage. This system is proof it can be done properly.</p>
+    </div>
+
+    <div class="client-feature">
+      <div class="client-logo" aria-hidden="true">
+        <!-- Replace this with an <img src="your-logo.png" alt="Global Computers LLC"> tag once you have the logo file -->
+        <img src="global_computers.png" alt="Global Computers LLC">
+        <!-- <span class="mono">LOGO</span> -->
+      </div>
+      <div class="client-copy">
+        <h3>Global Computers LLC</h3>
+        <p>One of the leading sellers of digital products in the UAE Amazon market. Every service listed above runs in production on their live order and financial data, handling the full complexity of the SP API so their team does not have to.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="eyebrow">Who's building this</div>
+      <h2 class="display" style="font-size:1.6rem; font-weight:500;">A developer who's built this exact backend before.</h2>
+    </div>
+    <div>
+      <p>I am a third year Computing and Software Systems student at the University of Melbourne, building backend software specifically for Amazon sellers.</p>
+      <p>The SP API is genuinely difficult to work with. It is inconsistently documented, rate limited, and prone to changing behaviour with little warning. I have hands on experience navigating that complexity, and I built and maintain a production system for Global Computers LLC that handles it day to day.</p>
+      <p>I keep a small number of clients so each integration is actually tailored to how your business runs, not a generic dashboard.</p>
+      <div class="credentials">
+        <span class="credential">AWS Certified Developer Associate</span>
+        <span class="credential">AWS Cloud Practitioner</span>
+        <span class="credential">Technical Officer, AWS Cloud Club UniMelb</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="offer">
+  <div class="wrap">
+    <div class="offer-grid">
+      <div class="offer-card">
+        <div class="eyebrow">Pilot offer</div>
+        <h3>First automation, free to build.</h3>
+        <p>Happy to build one automation for you at no cost for the build itself — you'd only cover any operational costs it runs on (hosting, API usage, that kind of thing). It's the fastest way for both of us to see if this is worth continuing.</p>
+      </div>
+      <div class="offer-card">
+        <div class="eyebrow">Referral program</div>
+        <h3>Refer a seller, earn 20%.</h3>
+        <p>If you refer another seller and they come on as a client, you get 20% of the agreed project amount. No cap, no catch, just a thank you for the introduction.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-panel">
+      <h2>Tell me about your business.</h2>
+      <p>Fill in a few details about what you sell, where the manual work is, what you'd want automated and I'll reach out to talk through it.</p>
+
+      <div id="form-container"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <span id="footer-brand">Malcorix</span>
+  <span id="footer-email"></span>
+</footer>
+
+<script>
+  (function(){
+    var cfg = window.SITE_CONFIG || {};
+    document.getElementById('brand-name').textContent = cfg.brand || 'Malcorix';
+    document.getElementById('brand-tag').textContent = cfg.tagline || '';
+    document.getElementById('footer-brand').textContent = '© ' + new Date().getFullYear() + ' ' + (cfg.brand || 'Malcorix');
+    document.title = (cfg.brand || 'Malcorix') + ' — ' + (cfg.tagline || 'Amazon seller software');
+
+    var emailEl = document.getElementById('footer-email');
+    if(cfg.email){ emailEl.innerHTML = '<a href="mailto:' + cfg.email + '">' + cfg.email + '</a>'; }
+
+    var container = document.getElementById('form-container');
+    if(cfg.googleFormEmbedUrl){
+      var wrap = document.createElement('div');
+      wrap.className = 'form-embed';
+      wrap.innerHTML = '<iframe src="' + cfg.googleFormEmbedUrl + '" title="Contact form">Loading form…</iframe>';
+      container.appendChild(wrap);
+    } else {
+      var fallback = document.createElement('div');
+      fallback.className = 'form-fallback';
+      var linkHref = cfg.googleFormLinkUrl || (cfg.email ? ('mailto:' + cfg.email) : '#');
+      var linkLabel = cfg.googleFormLinkUrl ? 'Open the form' : 'Email directly';
+      fallback.innerHTML =
+        '<p>Google Form not connected yet — add <span class="mono">googleFormEmbedUrl</span> or <span class="mono">googleFormLinkUrl</span> near the top of this file.</p>' +
+        '<a href="' + linkHref + '" class="btn-primary" target="_blank" rel="noopener">' + linkLabel + '</a>';
+      container.appendChild(fallback);
+    }
+
+    // subtle ledger tick, respects reduced motion
+    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      var margin = document.getElementById('stat-margin');
+      var vals = ['18.4%','18.6%','18.3%','18.7%'];
+      var i = 0;
+      setInterval(function(){
+        i = (i+1) % vals.length;
+        margin.textContent = vals[i];
+      }, 2600);
+    }
+  })();
+</script>
+
+</body>
+</html>
